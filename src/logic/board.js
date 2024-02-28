@@ -8,8 +8,8 @@ export const checkWinnerFrom = (boardToCheck) => {
 
     if (
       boardToCheck[a] &&
-        boardToCheck[a] === boardToCheck[b] &&
-        boardToCheck[a] === boardToCheck[c]
+      boardToCheck[a] === boardToCheck[b] &&
+      boardToCheck[a] === boardToCheck[c]
     ) {
       return boardToCheck[a]
     }

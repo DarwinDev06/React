@@ -62,6 +62,7 @@ body {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 10px;
+  
 }
 
 .turn {
@@ -129,3 +130,9 @@ body {
   cursor: pointer;
   font-size: 48px;
 }
+
+.winner .check:hover {
+  cursor: pointer;
+  color: beige;
+}
+

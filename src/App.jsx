@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import confetti from 'canvas-confetti'
 import './App.css'
 import { Square } from './components/Square'
@@ -6,10 +6,10 @@ import { TURNS } from './constants'
 import { checkWinnerFrom, checkEndGame } from './logic/board'
 import { WinnerModal } from './components/Winner'
 import { saveGameToStorage, resetGameStorage } from './logic/storage'
+import { MouseFollower } from './components/MouseFollower'
 
-/* [Array(9).fill(null)] 'x','o','x','x','o','x','x','o','x', */
+
 function App () {
-  // const [board, setBoard] = useState(Array(9).fill(null))
 
   const [board, setBoard] = useState(() => {
     const boardFromStorage = window.localStorage.getItem('board')
@@ -18,6 +18,10 @@ function App () {
 
     return Array(9).fill(null)
   })
+
+  //constante para maejo de la posicion del mause
+  const [position, setPosition] = useState({x: 0, y:0})
+  const [enable, setEnable] = useState(true)
 
   // const [turn, setTurn] = useState(TURNS.X)
   const [turn, setTurn] = useState(() => {
@@ -29,10 +33,17 @@ function App () {
   const [winner, setWinner] = useState(null)
 
   const resetGame = () => {
+    console.log('reseteando')
     setBoard(Array(9).fill(null))
     setTurn(TURNS.X)
     setWinner(null)
     resetGameStorage()
+    setPosition({x: 0, y:0 })
+    setEnable(true)
+  }
+
+  const showSquare = () => {
+    setWinner(true)
   }
 
   const updateBoard = (index) => {
@@ -56,11 +67,30 @@ function App () {
     const newWiner = checkWinnerFrom(newBoard)
     if (newWiner) {
       confetti()
+      setEnable(false)
       setWinner(newWiner) // ganador
     } else if (checkEndGame(newBoard)) {
       setWinner(false) // empate
+      setEnable(false)
     }
   }
+
+  useEffect(() => {
+
+    const handleMove = (event) => {
+      const {clientX, clientY} = event
+
+      setPosition({x: clientX, y: clientY})
+    }
+
+    if (enable){
+      window.addEventListener('pointermove', handleMove)
+    }
+    
+    return () => {
+      window.removeEventListener('pointermove', handleMove )
+    }
+  },[enable])
 
   return (
     <main className='board'>
@@ -81,6 +111,7 @@ function App () {
         }
 
       </section>
+      <h3>{winner ? 'juego terminado' : ''}</h3>
       <section className='turn'>
         <Square isSelected={turn === TURNS.X}>
           {TURNS.X}
@@ -89,13 +120,15 @@ function App () {
           {TURNS.O}
         </Square>
       </section>
-
+      
       <section>
         <button onClick={resetGame}>Empezar de nuevo</button>
       </section>
 
-      <WinnerModal resetGame={resetGame} winner={winner} />
+      <WinnerModal resetGame={resetGame} winner={winner} showSquare={showSquare} />
 
+      <MouseFollower enable={enable} position={position} turn={turn} />
+      
     </main>
 
   )
