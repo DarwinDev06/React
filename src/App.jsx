@@ -8,9 +8,7 @@ import { WinnerModal } from './components/Winner'
 import { saveGameToStorage, resetGameStorage } from './logic/storage'
 import { MouseFollower } from './components/MouseFollower'
 
-
 function App () {
-
   const [board, setBoard] = useState(() => {
     const boardFromStorage = window.localStorage.getItem('board')
 
@@ -19,8 +17,8 @@ function App () {
     return Array(9).fill(null)
   })
 
-  //constante para maejo de la posicion del mause
-  const [position, setPosition] = useState({x: 0, y:0})
+  // constante para maejo de la posicion del mause
+  const [position, setPosition] = useState({ x: 0, y: 0 })
   const [enable, setEnable] = useState(true)
 
   // const [turn, setTurn] = useState(TURNS.X)
@@ -38,7 +36,7 @@ function App () {
     setTurn(TURNS.X)
     setWinner(null)
     resetGameStorage()
-    setPosition({x: 0, y:0 })
+    setPosition({ x: 0, y: 0 })
     setEnable(true)
   }
 
@@ -76,21 +74,20 @@ function App () {
   }
 
   useEffect(() => {
-
     const handleMove = (event) => {
-      const {clientX, clientY} = event
+      const { clientX, clientY } = event
 
-      setPosition({x: clientX, y: clientY})
+      setPosition({ x: clientX, y: clientY })
     }
 
-    if (enable){
+    if (enable) {
       window.addEventListener('pointermove', handleMove)
     }
-    
+
     return () => {
-      window.removeEventListener('pointermove', handleMove )
+      window.removeEventListener('pointermove', handleMove)
     }
-  },[enable])
+  }, [enable])
 
   return (
     <main className='board'>
@@ -120,7 +117,7 @@ function App () {
           {TURNS.O}
         </Square>
       </section>
-      
+
       <section>
         <button onClick={resetGame}>Empezar de nuevo</button>
       </section>
@@ -128,7 +125,7 @@ function App () {
       <WinnerModal resetGame={resetGame} winner={winner} showSquare={showSquare} />
 
       <MouseFollower enable={enable} position={position} turn={turn} />
-      
+
     </main>
 
   )

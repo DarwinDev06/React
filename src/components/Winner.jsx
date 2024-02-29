@@ -1,7 +1,7 @@
 import { Square } from './Square'
 
 export function WinnerModal ({ winner, resetGame, showSquare }) {
-  if (winner === null || winner===true) return null
+  if (winner === null || winner === true) return null
 
   const winnerText = winner === false ? 'Empate' : 'Ganó'
 
